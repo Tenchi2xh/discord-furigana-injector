@@ -15,3 +15,9 @@
 - Paste in the content of `furigana.js`
 
 To stop the injection, either execute `clearInterval(a)` or restart Discord with <kbd>⌘</kbd> + <kbd>R</kbd> / <kbd>CTRL</kbd> + <kbd>R</kbd>
+
+## Future
+
+- Use [mecab-emscripten](https://github.com/fasiha/mecab-emscripten) to allow for easy cross-platform distribution with no need for manual installing of mecab
+- Find a cleaner way to inject furigana
+- Make installers for easy installation that do not involve pasting in the console

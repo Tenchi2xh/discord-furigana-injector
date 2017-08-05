@@ -86,7 +86,7 @@ function furiToRb(kanji, reading) {
             after = slice(reading, lastReading - placeRight);
         }
     }
-    return `${before}<ruby><rb>${ruby}</rb><rt>${rt}</rt></ruby>${after}`;
+    return `${before}<ruby><rb>${ruby}</rb><rt style="-webkit-user-select:none;">${rt}</rt></ruby>${after}`;
 }
 
 

@@ -138,7 +138,7 @@
 
                 sentenceToFurigana(text, (furi) => {
                     var span = document.createElement('span');
-                    span.innerHTML = `<span>${furi}</span>`
+                    span.innerHTML = furi;
                     message.replaceChild(span, node);
                     cb();
                 });

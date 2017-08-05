@@ -1,172 +1,172 @@
-    let cp = require('child_process');
-    let StringDecoder = require('string_decoder').StringDecoder;
+let cp = require('child_process');
+let StringDecoder = require('string_decoder').StringDecoder;
 
-    function mecab(input, callback) {
-        let decoder = new StringDecoder('utf8');
-        var c = cp.spawn('/usr/local/bin/mecab', []);
+function mecab(input, callback) {
+    let decoder = new StringDecoder('utf8');
+    var c = cp.spawn('/usr/local/bin/mecab', []);
 
-        c.stdin.write(input + '\n');
-        c.stdout.on('data', data => {
-            callback(decoder.write(data));
-        });
-        c.stdin.end();
-    }
+    c.stdin.write(input + '\n');
+    c.stdout.on('data', data => {
+        callback(decoder.write(data));
+    });
+    c.stdin.end();
+}
 
-    function katakanaToHiragana(input = '') {
-        const HIRAGANA_START = 0x3041;
-        const KATAKANA_START = 0x30A1;
-        const KATAKANA_END = 0x30FC;
-        var hira = '';
-        for (var letter of input) {
-            var code = letter.charCodeAt(0);
-            if (code >= KATAKANA_START && code <= KATAKANA_END)
-                code = code + (HIRAGANA_START - KATAKANA_START);
-            hira += String.fromCharCode(code);
-        }
-        return hira;
+function katakanaToHiragana(input = '') {
+    const HIRAGANA_START = 0x3041;
+    const KATAKANA_START = 0x30A1;
+    const KATAKANA_END = 0x30FC;
+    var hira = '';
+    for (var letter of input) {
+        var code = letter.charCodeAt(0);
+        if (code >= KATAKANA_START && code <= KATAKANA_END)
+            code = code + (HIRAGANA_START - KATAKANA_START);
+        hira += String.fromCharCode(code);
     }
-        
-    function slice(string, start, end, step) { // a proper substr
-        var slice = string.slice, sliced = slice.call(string, start, end), result, length, i;
-        if (!step)
-            return sliced;
-        result = [];
-        length = sliced.length;
-        i = (step > 0) ? 0 : length - 1;
-        for (; i < length && i >= 0; i += step) {
-            result.push(sliced[i]);
-        }
-        return result.join('');
+    return hira;
+}
+    
+function slice(string, start, end, step) { // a proper substr
+    var slice = string.slice, sliced = slice.call(string, start, end), result, length, i;
+    if (!step)
+        return sliced;
+    result = [];
+    length = sliced.length;
+    i = (step > 0) ? 0 : length - 1;
+    for (; i < length && i >= 0; i += step) {
+        result.push(sliced[i]);
     }
-        
-    function furiToRb(kanji, reading) {
-        if (kanji == reading)
-            return reading;
-        if (kanji == 'だ' && reading == "で")
-            return "だ";
-        var furigana = '';
-        var placeLeft = 0
-        var placeRight = 0
-        var lastKanji = kanji.length;
-        var lastReading = reading.length;
-        var j = 0;
-        for (var i = 0; i < kanji.length; i++) {
-            placeRight = i;
-            j = i + 1;
-            if (kanji[lastKanji - j] != reading[lastReading - j])
-                break;
-        }
-        for (var i = 0; i < kanji.length; i++) {
-            placeLeft = i
-            if (kanji[i] != reading[i])
-                break;
-        }
-        var before = '';
-        var after = '';
-        var ruby = '';
-        var rt = '';
-        if (placeLeft == 0) {
-            if (placeRight == 0) {
-                ruby = kanji;
-                rt = reading;
-            } else {
-                ruby = slice(kanji, 0, lastKanji - placeRight);
-                rt = slice(reading, 0, lastReading - placeRight);
-                after = slice(reading, lastReading - placeRight);
-            }
+    return result.join('');
+}
+    
+function furiToRb(kanji, reading) {
+    if (kanji == reading)
+        return reading;
+    if (kanji == 'だ' && reading == "で")
+        return "だ";
+    var furigana = '';
+    var placeLeft = 0
+    var placeRight = 0
+    var lastKanji = kanji.length;
+    var lastReading = reading.length;
+    var j = 0;
+    for (var i = 0; i < kanji.length; i++) {
+        placeRight = i;
+        j = i + 1;
+        if (kanji[lastKanji - j] != reading[lastReading - j])
+            break;
+    }
+    for (var i = 0; i < kanji.length; i++) {
+        placeLeft = i
+        if (kanji[i] != reading[i])
+            break;
+    }
+    var before = '';
+    var after = '';
+    var ruby = '';
+    var rt = '';
+    if (placeLeft == 0) {
+        if (placeRight == 0) {
+            ruby = kanji;
+            rt = reading;
         } else {
-            if (placeRight == 0) {
-                before = slice(reading, 0, placeLeft);
-                ruby = slice(kanji, placeLeft);
-                rt = slice(reading, placeLeft);
-            } else {
-                before = slice(reading, 0, placeLeft);
-                ruby = slice(kanji, placeLeft, lastKanji - placeRight);
-                rt = slice(reading, placeLeft, lastReading - placeRight);
-                after = slice(reading, lastReading - placeRight);
-            }
+            ruby = slice(kanji, 0, lastKanji - placeRight);
+            rt = slice(reading, 0, lastReading - placeRight);
+            after = slice(reading, lastReading - placeRight);
         }
-        return `${before}<ruby><rb>${ruby}</rb><rt>${rt}</rt></ruby>${after}`;
+    } else {
+        if (placeRight == 0) {
+            before = slice(reading, 0, placeLeft);
+            ruby = slice(kanji, placeLeft);
+            rt = slice(reading, placeLeft);
+        } else {
+            before = slice(reading, 0, placeLeft);
+            ruby = slice(kanji, placeLeft, lastKanji - placeRight);
+            rt = slice(reading, placeLeft, lastReading - placeRight);
+            after = slice(reading, lastReading - placeRight);
+        }
     }
+    return `${before}<ruby><rb>${ruby}</rb><rt>${rt}</rt></ruby>${after}`;
+}
 
 
-    function sentenceToFurigana(sentence, cb) {
-        mecab(sentence, (stdout) => {
-            var rows = stdout.split("\n");
-            var furi = '';
-            for (var row of rows) {
-                row = row.split("\t");
-                const original = row[0];
-                let cols = row[1];
-                if (typeof cols === 'undefined')
-                    continue;
-                cols = cols.split(',');
-                const isText = (original.match(/([A-Za-z0-9]+)$/) !== null);
-                const isHiraKata = (original.match(/^([\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f]+)$/) !== null);
-                const isControlCharacter = original.includes('\x9d') || original.includes('\x9e');
-                if (isText || isHiraKata || isControlCharacter)
-                    furi += original
-                else
-                    furi += furiToRb(original, katakanaToHiragana(cols[7]));
-            }
-            cb(furi.replace(/\x9d/g, "<br />").replace(/\x9e/g, " "));
-        });
-    }
+function sentenceToFurigana(sentence, cb) {
+    mecab(sentence, (stdout) => {
+        var rows = stdout.split("\n");
+        var furi = '';
+        for (var row of rows) {
+            row = row.split("\t");
+            const original = row[0];
+            let cols = row[1];
+            if (typeof cols === 'undefined')
+                continue;
+            cols = cols.split(',');
+            const isText = (original.match(/([A-Za-z0-9]+)$/) !== null);
+            const isHiraKata = (original.match(/^([\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f]+)$/) !== null);
+            const isControlCharacter = original.includes('\x9d') || original.includes('\x9e');
+            if (isText || isHiraKata || isControlCharacter)
+                furi += original
+            else
+                furi += furiToRb(original, katakanaToHiragana(cols[7]));
+        }
+        cb(furi.replace(/\x9d/g, "<br />").replace(/\x9e/g, " "));
+    });
+}
 
-    function replaceSync(message, node) {
-        return new Promise((resolve, reject) => {
-            try {
-                
-            } catch(e) {
-                reject(e);
-            }
-        });
-    }
+function replaceSync(message, node) {
+    return new Promise((resolve, reject) => {
+        try {
+            
+        } catch(e) {
+            reject(e);
+        }
+    });
+}
 
-    function processMessage(message, callback) {
-        if (message.className.includes("processed"))
-            return callback();
+function processMessage(message, callback) {
+    if (message.className.includes("processed"))
+        return callback();
 
-        var scrollPoint = document.querySelector('.messages.scroller').scrollTop;
+    var scrollPoint = document.querySelector('.messages.scroller').scrollTop;
 
-        var i = 0;
-        var childNodes = message.childNodes;
-        function processNode(node, cb) {
-            if (node.nodeType === 3) {
-                var text = node.textContent;
-                text = text.replace(/\n/g, '\x9d').replace(/\s/g, '\x9e');
+    var i = 0;
+    var childNodes = message.childNodes;
+    function processNode(node, cb) {
+        if (node.nodeType === 3) {
+            var text = node.textContent;
+            text = text.replace(/\n/g, '\x9d').replace(/\s/g, '\x9e');
 
-                sentenceToFurigana(text, (furi) => {
-                    var span = document.createElement('span');
-                    span.innerHTML = furi;
-                    message.replaceChild(span, node);
-                    cb();
-                });
-            }else
+            sentenceToFurigana(text, (furi) => {
+                var span = document.createElement('span');
+                span.innerHTML = furi;
+                message.replaceChild(span, node);
                 cb();
+            });
+        }else
+            cb();
+    }
+    
+    function doProcess() {
+        if(i < childNodes.length)
+            processNode(childNodes[i++], doProcess);
+        else {
+            message.className += " processed";
+            document.querySelector('.messages.scroller').scrollTop = scrollPoint + 12;
+            callback();
         }
-        
-        function doProcess() {
-            if(i < childNodes.length)
-                processNode(childNodes[i++], doProcess);
-            else {
-                message.className += " processed";
-                document.querySelector('.messages.scroller').scrollTop = scrollPoint + 12;
-                callback();
-            }
-        }
-        
-        doProcess();
+    }
+    
+    doProcess();
+}
+
+var a = setInterval(() => {
+    var messages = document.querySelector(".messages").querySelectorAll('.markup');
+    var i = messages.length - 1;
+
+    function doProcess() {
+        if (i > 0)
+            processMessage(messages[i--], doProcess);
     }
 
-    var a = setInterval(() => {
-        var messages = document.querySelector(".messages").querySelectorAll('.markup');
-        var i = messages.length - 1;
-
-        function doProcess() {
-            if (i > 0)
-                processMessage(messages[i--], doProcess);
-        }
-
-        doProcess();
-    }, 1000);
+    doProcess();
+}, 1000);

@@ -109,7 +109,7 @@ function sentenceToFurigana(sentence, cb) {
             else
                 furi += furiToRb(original, katakanaToHiragana(cols[7]));
         }
-        cb(furi.replace(/\x9d/g, "<br />").replace(/\x9e/g, " "));
+        cb(furi.replace(/\x9d/g, "<br />").replace(/\x9f/g, "　").replace(/\x9e/g, " "));
     });
 }
 
@@ -134,7 +134,7 @@ function processMessage(message, callback) {
     function processNode(node, cb) {
         if (node.nodeType === 3) {
             var text = node.textContent;
-            text = text.replace(/\n/g, '\x9d').replace(/\s/g, '\x9e');
+            text = text.replace(/\n/g, '\x9d').replace(/\u3000/g, '\x9f').replace(/\s/g, '\x9e');
 
             sentenceToFurigana(text, (furi) => {
                 var span = document.createElement('span');

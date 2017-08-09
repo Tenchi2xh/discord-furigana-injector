@@ -20,4 +20,15 @@ To stop the injection, either execute `clearInterval(a)` or restart Discord with
 
 - Use [mecab-emscripten](https://github.com/fasiha/mecab-emscripten) to allow for easy cross-platform distribution with no need for manual installing of mecab
 - Find a cleaner way to inject furigana
-- Make installers for easy installation that do not involve pasting in the console
+- ~~Make installers for easy installation that do not involve pasting in the console~~
+
+## Removing injector:
+
+On windows: 
+
+- Reinstall discord
+
+On linux and mac:
+
+- `rm /usr/share/discord/resources/app.asar`
+- `sudo mv /usr/share/discord/resources/app.asar{.bak,}`

@@ -9,7 +9,7 @@
     - On Ubuntu: `sudo apt-get install mecab mecab-ipadic mecab-ipadic-utf8`
 
 - Open the Discord developer console `View` → `Developer` → `Toggle Developer Tools`
-    - On OS X: <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>I</kbd>
+    - On OS X: <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>I</kbd>
     - Other: <kbd>CTRL</kbd> + <kbd>⇧</kbd> + <kbd>I</kbd>
 
 - Paste in the content of `furigana.js`

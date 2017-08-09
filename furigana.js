@@ -3,11 +3,7 @@ let StringDecoder = require('string_decoder').StringDecoder;
 
 function mecab(input, callback) {
     let decoder = new StringDecoder('utf8');
-<<<<<<< HEAD
-    var c = cp.spawn('/usr/bin/mecab', []);
-=======
     var c = cp.spawn('/usr/local/bin/mecab', []);
->>>>>>> refs/remotes/origin/master
 
     c.stdin.write(input + '\n');
     c.stdout.on('data', data => {
@@ -90,11 +86,7 @@ function furiToRb(kanji, reading) {
             after = slice(reading, lastReading - placeRight);
         }
     }
-<<<<<<< HEAD
-    return `${before}<ruby><rb>${ruby}</rb><rt>${rt}</rt></ruby>${after}`;
-=======
     return `${before}<ruby><rb>${ruby}</rb><rt style="-webkit-user-select:none;">${rt}</rt></ruby>${after}`;
->>>>>>> refs/remotes/origin/master
 }
 
 
@@ -117,11 +109,7 @@ function sentenceToFurigana(sentence, cb) {
             else
                 furi += furiToRb(original, katakanaToHiragana(cols[7]));
         }
-<<<<<<< HEAD
-        cb(furi.replace(/\x9d/g, "<br />").replace(/\x9e/g, " "));
-=======
         cb(furi.replace(/\x9d/g, "<br />").replace(/\x9f/g, "　").replace(/\x9e/g, " "));
->>>>>>> refs/remotes/origin/master
     });
 }
 
@@ -146,19 +134,11 @@ function processMessage(message, callback) {
     function processNode(node, cb) {
         if (node.nodeType === 3) {
             var text = node.textContent;
-<<<<<<< HEAD
-            text = text.replace(/\n/g, '\x9d').replace(/\s/g, '\x9e');
-
-            sentenceToFurigana(text, (furi) => {
-                var span = document.createElement('span');
-                span.innerHTML = `<span>${furi}</span>`
-=======
             text = text.replace(/\n/g, '\x9d').replace(/\u3000/g, '\x9f').replace(/\s/g, '\x9e');
 
             sentenceToFurigana(text, (furi) => {
                 var span = document.createElement('span');
                 span.innerHTML = furi;
->>>>>>> refs/remotes/origin/master
                 message.replaceChild(span, node);
                 cb();
             });

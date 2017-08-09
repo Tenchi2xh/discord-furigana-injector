@@ -1,0 +1,22 @@
+{
+  "name": "discord-furigana-injector",
+  "version": "1.0.0",
+  "description": "<img width=430 src=\"https://user-images.githubusercontent.com/4116708/28990536-b669da42-797e-11e7-9e68-4d8bd42d0a92.png\" />",
+  "main": "install.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tenchi2xh/discord-furigana-injector.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tenchi2xh/discord-furigana-injector/issues"
+  },
+  "homepage": "https://github.com/Tenchi2xh/discord-furigana-injector#readme",
+  "dependencies": {
+    "asar": "^0.13.0"
+  }
+}
